@@ -48,6 +48,7 @@ class YouTubeDownloader:
         self.start_download(urls, output_dir)
 
     def start_download(self, urls, output_dir):
+        urls[:] = [u for u in urls if u != '']
         if len(urls) > 0:
             self.remaining_urls += len(urls)
             self.total_urls = self.remaining_urls
@@ -55,7 +56,7 @@ class YouTubeDownloader:
             self.status_label.config(text=f"{self.remaining_urls}/{self.total_urls} URL{r_plural} remaining", fg=f"#007f00")
             for url in urls:
                 if "list" in url:
-                    output_formatting = os.path.join(output_dir, '%(playlist_uploader)s', 'YYYY - %(playlist_title)s', '%(playlist_index)s - %(title)s.%(ext)s')
+                    output_formatting = os.path.join(output_dir, '%(playlist_uploader)s', '%(playlist_title)s', '%(playlist_index)s - %(title)s.%(ext)s')
                 else:
                     output_formatting = os.path.join(output_dir, '%(uploader)s', '%(title)s.%(ext)s')
                 cmd = [
@@ -69,7 +70,6 @@ class YouTubeDownloader:
                     thread.start()
                 except Exception as err:
                     self.status_label.config(text=err, fg="#f44")
-
         else:
             self.status_label.config(fg="#f44")
             if self.remaining_urls == 0:
